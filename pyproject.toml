@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "aws-python-snippets"
+version = "1.0.0"
+description = "AWS useful python snippets"
+authors = ["Ruben Romero <ruben.romcor@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "snippets" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+boto3 = "*"
+poethepoet = "*"
+pytest = "*"
+pytest-cov = "*"
+pylint = "*"
+bandit = "*"
+moto = "3.1.17"
+
+[tool.poe.tasks]
+run-bandit = ["pylint", "bandit"]
+run-tests = ["install", "tests"]
+
+[tool.poe.tasks.install]
+help = "Installing dependencies"
+cmd = "poetry install"
+
+[tool.poe.tasks.update]
+help = "Updating dependencies to poetry.lock"
+cmd = "poetry update"
+
+[tool.poe.tasks.bandit]
+help = "Find security issues!"
+cmd = "bandit -r src"
+
+[tool.poe.tasks.pylint]
+help = "Analyzing code with pylint"
+cmd = "pylint snippets --exit-zero"
+
+[tool.poe.tasks.tests]
+help = "Running tests"
+cmd = "pytest -s --cov-report xml:coverage-poetry.xml  --cov-report html --junitxml xunit-report.xml --cov snippets"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
